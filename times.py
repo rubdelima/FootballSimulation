@@ -1,7 +1,7 @@
 from players import Player
 import csv
 
-def get_players()->list:
+def get_players()->list[Player]:
     with open ('players_fifa23.csv', 'r', newline='', 
            encoding='utf-8') as database:
         linhas = csv.reader(database)
