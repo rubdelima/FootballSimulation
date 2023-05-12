@@ -60,7 +60,7 @@ class Player:
         
       
 
-with open ('players_fifa23.csv', 'r', newline='', 
+with open ('datas_sets\\players_fifa23.csv', 'r', newline='', 
            encoding='utf-8') as database:
     linhas = csv.reader(database)
     linhas = [linha for linha in linhas]

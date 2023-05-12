@@ -1,41 +1,6 @@
 from players import Player
 import csv
 
-def get_players()->list[Player]:
-    with open ('players_fifa23.csv', 'r', newline='', 
-           encoding='utf-8') as database:
-        linhas = csv.reader(database)
-        linhas = [linha for linha in linhas]
-        args = linhas.pop(0)
-        lista_players = [Player(i) for i in linhas]
-        return lista_players
-
-def get_teams()->dict:
-    with open ('teams_fifa23.csv', 'r', newline='', 
-               encoding='utf-8') as database:
-        linhas = csv.reader(database)
-        linhas = [linha for linha in linhas]
-        args = linhas.pop(0)
-        '''
-        print(f"|{'N':<2}| {'Item':<15} | {'Valor':<15}|")
-        for i in range(len(args)):
-            print(f"|{i:<2}| {args[i]:<15} | {linhas[0][i]:<15}|")
-        '''
-        lista_teams = {}
-        for i in linhas:
-            try:
-                lista_teams[i[0]] = Team(i, dict_teams_playerlist)
-            except:
-                try:
-                    print(f'Erro ao adicionar o time {i[1]}')
-                except:
-                    print("Erro cabuloso dms, slc")
-                    
-        return lista_teams
-
-lista_players = get_players()
-dict_teams_playerlist = {}
-
 class Team():
     def __init__(self, args:list, d_players_l:dict):
         self.id = args[0]
@@ -51,7 +16,12 @@ class Team():
         print("-"*80)
         print("| {:<3} | {:<17} | {:<2} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} |".format(
             'POS', 'Nome', 'OV', 'VEL', 'FIN', 'DRI', 'PAS', 'DEF', 'FIS', 'GK', 'RPS'))
-        [print(i.get_player_info()) for i in self.players]
+        for player in self.players:
+            try:
+                print(player.get_player_info())
+            except UnicodeEncodeError:
+                print(f"Não foi possivel exibir o jogador de id:{player.id}")
+            
         print("-"*80)
         
     def get_best_formations(self)->list:
@@ -99,7 +69,37 @@ class Team():
         self.time_titular = time_titular
 
         return [sum(formacao[:2]), sum(formacao[2:5]), sum(formacao[5:])]
-        
+
+def get_players()->list[Player]:
+    with open ('datas_sets\\players_fifa23.csv', 'r', newline='', 
+           encoding='utf-8') as database:
+        linhas = csv.reader(database)
+        linhas = [linha for linha in linhas]
+        args = linhas.pop(0)
+        lista_players = [Player(i) for i in linhas]
+        return lista_players
+
+def get_teams()->dict:
+    with open ('datas_sets\\teams_fifa23.csv', 'r', newline='', 
+               encoding='utf-8') as database:
+        linhas = csv.reader(database)
+        linhas = [linha for linha in linhas]
+        args = linhas.pop(0)
+        lista_teams = {}
+        for i in linhas:
+            try:
+                lista_teams[i[0]] = Team(i, dict_teams_playerlist)
+            except:
+                try:
+                    print(f'Erro ao adicionar o time {i[1]}')
+                except:
+                    print("Erro cabuloso dms, slc")
+                    
+        return lista_teams
+
+lista_players = get_players()
+dict_teams_playerlist = {}
+
 
 for i in lista_players:
     if i.clube not in dict_teams_playerlist.keys():
@@ -110,11 +110,6 @@ for i in lista_players:
 
 
 if __name__ == '__main__':
-    '''
-    print("| {:<3} | {:<17} | {:<2} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} | {:<3} |".format(
-            'POS', 'Nome', 'OV', 'VEL', 'FIN', 'DRI', 'PAS', 'DEF', 'FIS', 'GK', 'RPS'))
-    for i in range(20):
-        print(lista_players[i].get_player_info())
-    '''
+
     times = get_teams()
     times['5'].get_team_info()
